@@ -4,11 +4,11 @@ if [ $# != 1 ]; then
 	printf "Illegal number of arguments!\n"
 	printf "Type vmd -h or vmd --help for more information.\n"
 	exit 2
-elif [ "$1" == "--mount" -o "$1" == "-m" ]; then
+elif [ "$1" == "--mount" ] || [ "$1" == "-m" ]; then
 	re_for_disk_size='^[0-9][0-9]{0,4}[GgMmKk]{1}$'
 	printf "Set size of VMD (e.g. 1G, 512M, 256K etc.).
 		    (default size is 128m)\rType: " 
-	read disk_size
+	read -r disk_size
 	if ! [[ $disk_size =~ $re_for_disk_size ]]; then
 		disk_size="128m"
 		printf "\nIllegal argument!\nDisk will be created with default size!\n"
@@ -16,7 +16,7 @@ elif [ "$1" == "--mount" -o "$1" == "-m" ]; then
 	fi
 	printf "\nSet path to disk folder (Any folder won't be created!)."
 	printf "\nType absolute path without quotes: "
-	read path_to_disk
+	read -r path_to_disk
 	if ! [[ -d $path_to_disk ]]; then 
 		printf 'Directory does not exist! Script aborted!\n'
 		exit 1 
@@ -25,22 +25,22 @@ elif [ "$1" == "--mount" -o "$1" == "-m" ]; then
 	touch "$path_to_disk/MOUNTED" && 
 	chmod 000 "$path_to_disk/MOUNTED" && 
 	echo -e -n "\nVMD disk mounted in \"$path_to_disk\"!\n"
-elif [ "$1" == "--unmount" -o "$1" == "-u" ]; then
-	printf "Possible tmpfs to unmount:\n" && tput setaf 6 && df -h | egrep "tmpfs*"
+elif [ "$1" == "--unmount" ] || [ "$1" == "-u" ]; then
+	printf "Possible tmpfs to unmount:\n" && tput setaf 6 && df -h | grep -E "^tmpfs"
 	tput sgr0
 	printf "\nType absolute path without quotes\nto unmount one of tmpfs: "
-	read path_to_unmount_disk
-	sudo umount "$path_to_unmount_disk"
-	if [ $? -eq 0 ]; then
-   		printf 'VMD disk unmounted!\n'
+	read -r path_to_unmount_disk
+	if sudo umount "$path_to_unmount_disk"; then
+   		printf 'VMD unmounted!\n'
 		exit 0
 	else
+        printf 'Error occurred during unmount VMD!\n'
 		exit $?
 	fi
-elif [ "$1" == "--list" -o "$1" == "-l" ]; then
-        printf "Possible tmpfs to unmount:\n" && tput setaf 6 && df -h | egrep "tmpfs*"
+elif [ "$1" == "--list" ] || [ "$1" == "-l" ]; then
+        printf "Possible tmpfs to unmount:\n" && tput setaf 6 && df -h | grep -E "^tmpfs"
         tput sgr0
-elif [ "$1" == "--help" -o "$1" == "-h" ]; then
+elif [ "$1" == "--help" ] || [ "$1" == "-h" ]; then
 	printf " Parameters:
 	-m --mount   - Mount a Volatile Memory Disk
 	-u --unmount - Unmount a Volatile Memory Disk
