@@ -1,2 +1,3 @@
-# Volatile_Memory_Disks_Manager_for_Linux
-Volatile Memory Disks Manager is command line program for easy mount and unmount temporary file systems (tmpfs). Tested on ParrotOS Home and ParrotOS Security. Created in few hours for practice of Bash and one's own needs.
+# Volatile Memory Disks Manager for Linux
+Volatile Memory Disks Manager is a command-line program for easy mount and unmounts temporary file systems (tmpfs).
+Tested on ParrotOS Home and ParrotOS Security. Created in a few hours for the practice of Bash and one's own needs.
